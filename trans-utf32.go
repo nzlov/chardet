@@ -1,8 +1,10 @@
 package chardet
 
 import (
-	"code.google.com/p/go.text/transform"
 	. "unicode/utf8"
+
+	"golang.org/x/text/encoding"
+	"golang.org/x/text/transform"
 )
 
 // 提供给用户使用的并发安全的编解码器接口
@@ -188,23 +190,31 @@ func (u *u8t32l) Reset() {
 type utf32le struct{}
 
 // 返回解码小端在前的UTF-16到UTF-8的解码器
-func (u utf32le) NewDecoder() transform.Transformer {
-	return new(u32lt8)
+func (u utf32le) NewDecoder() *encoding.Decoder {
+	return &encoding.Decoder{
+		Transformer: new(u32lt8),
+	}
 }
 
 // 返回编码UTF-8到小端在前的UTF-16的编码器
-func (u utf32le) NewEncoder() transform.Transformer {
-	return new(u8t32l)
+func (u utf32le) NewEncoder() *encoding.Encoder {
+	return &encoding.Encoder{
+		Transformer: new(u8t32l),
+	}
 }
 
 type utf32be struct{}
 
 // 返回编码UTF-8到大端在前的UTF-16的解码器
-func (u utf32be) NewDecoder() transform.Transformer {
-	return new(u32bt8)
+func (u utf32be) NewDecoder() *encoding.Decoder {
+	return &encoding.Decoder{
+		Transformer: new(u32bt8),
+	}
 }
 
 // 返回解码大端在前的UTF-16到UTF-8的解码器
-func (u utf32be) NewEncoder() transform.Transformer {
-	return new(u8t32b)
+func (u utf32be) NewEncoder() *encoding.Encoder {
+	return &encoding.Encoder{
+		Transformer: new(u8t32b),
+	}
 }
